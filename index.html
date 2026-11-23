@@ -1,0 +1,1208 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141416">
+<title>HEYDI</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HEYDI">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{
+  --bg:#f6f5f2; --surface:#ffffff; --surface2:#efede8; --text:#1d1d1f; --muted:#6b6b70;
+  --line:#e2dfd8; --accent:#2f5bd3; --accent-text:#ffffff; --good:#2e8b57; --warn:#c7851a; --bad:#c43d3d;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#141416; --surface:#1e1e21; --surface2:#28282c; --text:#f2f2f4; --muted:#9a9aa2;
+    --line:#333338; --accent:#6d8ff0; --accent-text:#0f1220; --good:#5cbf86; --warn:#e0a84a; --bad:#e46a6a;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);
+  font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--text)}
+#app{max-width:520px;margin:0 auto;min-height:100vh;padding:0 16px calc(166px + env(safe-area-inset-bottom))}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(16px + env(safe-area-inset-top)) 0 8px;position:sticky;top:0;background:var(--bg);z-index:5}
+header.top h1{font-size:22px;margin:0;font-weight:700;padding-left:17px}
+.flag{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:15px;display:flex;align-items:center;gap:6px}
+.back{border:none;background:none;padding:6px 0 6px 17px;color:var(--accent);font-size:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:12px 0}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:14px 16px;font-weight:600;font-size:16px;background:var(--accent);color:var(--accent-text);text-align:center}
+.btn.sec{background:var(--surface2);color:var(--text)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn + .btn{margin-top:10px}
+.row{display:flex;gap:10px}
+.row > *{flex:1}
+.rate .btn{padding:14px 6px;font-size:15px}
+.rate .b1{background:var(--good);color:#fff}
+.rate{margin-bottom:16px}
+.rate .btn{flex:1 1 0;margin:0}
+.rate .b2{background:var(--warn);color:#fff}
+.rate .b3{background:var(--bad);color:#fff}
+.btn.danger{background:var(--bad);color:#fff}
+select.full,input.full,textarea.full{width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:12px 0}
+.list .item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left}
+.list .item:last-child{border-bottom:none}
+.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.chip.learning{color:var(--accent)}
+.chip.known{color:var(--good)}
+.addbtn{border:1px dashed var(--line);background:none;border-radius:12px;padding:12px 16px;width:100%;text-align:left;color:var(--accent);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface2);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:22px}
+.stat span{font-size:12px;color:var(--muted)}
+.bar{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--good)}
+h2{font-size:17px;margin:20px 0 4px;padding-left:17px}
+select.full{-webkit-appearance:none;appearance:none;padding-right:44px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23888%27 stroke-width=%272.5%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;background-size:16px}
+h3{font-size:14px;margin:16px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+/* word card */
+.w-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.w-word{font-size:28px;font-weight:700;letter-spacing:.01em}
+.w-pos{color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.say{cursor:pointer;border-bottom:1px dotted var(--muted)}
+.say:hover{color:var(--accent)}
+.spk{border:none;background:var(--surface2);border-radius:999px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;flex:none;padding:0;color:var(--accent)}
+.spk svg{width:16px;height:16px}
+ul.plain{list-style:none;padding:0;margin:0}
+ul.plain li{padding:6px 0}
+.ex{padding:10px 0;border-top:1px solid var(--line)}
+.ex:first-of-type{border-top:none}
+.tr{margin-top:6px}
+.reveal{border:none;background:none;color:var(--accent);padding:0;font-size:14px}
+.exbtns{display:flex;gap:6px;margin-top:8px}
+.exbtns button{border:1px solid var(--line);background:none;border-radius:8px;padding:4px 10px;font-size:13px}
+.exbtns button:disabled{opacity:.5;cursor:default}
+.pat{margin-top:10px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--surface2);border-radius:8px}
+.pat div{margin-top:4px;font-weight:600}
+.pat div .muted{font-weight:400}
+.irr{background:var(--surface2);border-radius:10px;padding:10px 12px;margin-top:10px}
+textarea.note{width:100%;min-height:70px;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface2);resize:vertical}
+.front{text-align:center;padding:40px 16px}
+.front .w-word{font-size:34px}
+.notice{background:var(--surface2);border-radius:12px;padding:12px 17px;font-size:14px;margin:12px 0}
+.notice.warn{border-left:4px solid var(--warn);padding-left:13px}
+.hint{padding:0 17px}
+.page-title{margin:4px 0 12px;font-size:22px;padding-left:17px}
+/* bottom nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav.tabs .in{max-width:520px;margin:0 auto;display:flex}
+nav.tabs button{flex:1;border:none;background:none;padding:10px 0 12px;font-size:12px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+nav.tabs button.on{color:var(--accent)}
+nav.tabs svg{width:24px;height:24px}
+.menu{position:absolute;right:0;top:48px;min-width:190px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);overflow:hidden;z-index:20}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;padding:11px 12px;text-align:left;white-space:nowrap;border-radius:8px;font-size:16px}
+.menu button.on{color:var(--accent);font-weight:600}
+.menu button .ck{margin-left:auto}
+.menu button:hover{background:var(--surface2)}
+.rel{position:relative}
+label.set{display:block;margin:14px 0 6px;font-weight:600}
+.progress{font-size:14px;color:var(--muted);text-align:center;margin-top:8px}
+.cat-title{font-size:24px;font-weight:700;padding-left:17px}
+.full:disabled{opacity:.75}
+textarea.full{resize:vertical;line-height:1.4;display:block}
+.res{margin-top:12px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--good)}
+.res.bad{border-left-color:var(--bad)}
+.res-h{font-weight:600}
+.res.ok .res-h{color:var(--good)} .res.bad .res-h{color:var(--bad)}
+.res-sub{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:12px 0 4px}
+.res-fix{font-size:17px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 4px;font-weight:600;cursor:pointer}
+.switch input{-webkit-appearance:none;appearance:none;width:48px;height:28px;border-radius:999px;background:var(--surface2);border:1px solid var(--line);position:relative;flex:none;cursor:pointer;transition:background .2s}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s}
+.switch input:checked{background:var(--accent);border-color:var(--accent)}
+.switch input:checked::after{left:22px}
+.steps{display:flex;justify-content:center;gap:8px;margin-top:4px}
+.steps span{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:var(--surface2);color:var(--muted)}
+.steps span.on{background:var(--accent);color:var(--accent-text)}
+.steps span.done{background:var(--good);color:#fff}
+.tcard{padding:24px 16px}
+.task{font-size:22px;font-weight:700;margin:10px 0 6px}
+.spk.big{width:64px;height:64px}
+.spk.big svg{width:30px;height:30px}
+.notice.ok{border-left:4px solid var(--good);padding-left:13px}
+.notice.mask{font-family:ui-monospace,Menlo,monospace;font-size:18px;letter-spacing:.05em;text-align:center}
+.mw{display:inline-block;white-space:nowrap;letter-spacing:.3em;margin:2px .5em}
+#tin{font-size:18px}
+textarea#tin{resize:vertical}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));z-index:9;border:none;border-radius:999px;padding:14px 32px;background:var(--accent);color:var(--accent-text);font-weight:700;font-size:17px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:11}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:12;max-width:520px;margin:0 auto;padding:0 8px calc(8px + env(safe-area-inset-bottom))}
+.sheet .card{margin:0;border-radius:18px;box-shadow:0 -8px 30px rgba(0,0,0,.25)}
+.sheet .card{max-height:82vh;overflow:auto}
+.mean{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;cursor:pointer}
+.mean input{margin:2px 0 0;width:18px;height:18px;accent-color:var(--accent);flex:none}
+.mean.dis{opacity:.5;cursor:default}
+.busy{display:flex;align-items:center;gap:12px;padding:6px 0;color:var(--muted)}
+.spin{width:18px;height:18px;border:3px solid var(--surface2);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+header.top.static{position:static}
+.catsel{font-size:17px;font-weight:600;margin-top:4px}
+/* прогресс */
+:root{--c-new:#c9c4b8;--c-learn:var(--accent);--c-known:var(--good);--c-fire:#f08a24}
+@media (prefers-color-scheme: dark){:root{--c-new:#4a4a52}}
+.rings{display:flex;justify-content:space-around}
+.ring{text-align:center}
+.rwrap{position:relative;width:104px;height:104px;margin:0 auto}
+.rwrap svg{width:104px;height:104px}
+.rt{fill:none;stroke:var(--surface2);stroke-width:8}
+.rv{fill:none;stroke-width:8;stroke-linecap:round;stroke-dasharray:var(--len) var(--c);animation:draw 1s ease-out}
+.rv.r-new{stroke:var(--accent)} .rv.r-rev{stroke:var(--good)}
+@keyframes draw{from{stroke-dasharray:0 var(--c)}}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rc b{font-size:24px;line-height:1}
+.rc span{font-size:12px;color:var(--muted)}
+.rl{font-size:13px;color:var(--muted);margin-top:6px}
+.st-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.st-n{font-size:32px;color:var(--c-fire)}
+.dots{display:flex;justify-content:space-between;margin-top:14px}
+.dot{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.dot i{width:30px;height:30px;border-radius:50%;background:var(--surface2);display:block}
+.dot.on i{background:var(--c-fire);animation:pop .4s ease-out}
+.dot.today i{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--c-fire)}
+@keyframes pop{from{transform:scale(.3)}}
+.chart{display:flex;gap:8px;align-items:flex-end;height:120px;margin-top:12px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
+.barv{flex:1;width:100%;display:flex;align-items:flex-end;background:var(--surface2);border-radius:8px;overflow:hidden}
+.barv i{display:block;width:100%;background:var(--accent);opacity:.55;border-radius:8px;transform-origin:bottom;animation:grow .8s ease-out}
+.barv i.today{opacity:1}
+.col span{font-size:12px;color:var(--muted)} .col span.on{color:var(--text);font-weight:600}
+@keyframes grow{from{transform:scaleY(0)}}
+.stack{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--surface2);margin-top:12px}
+.stack i{display:block;height:100%;transform-origin:left;animation:growx .8s ease-out}
+@keyframes growx{from{transform:scaleX(0)}}
+.s-new{background:var(--c-new)} .s-learn{background:var(--c-learn)} .s-known{background:var(--c-known)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend b{color:var(--text)}
+.pct{color:var(--good)}
+@media (prefers-reduced-motion: reduce){.rv,.dot.on i,.barv i,.stack i{animation:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="tabs"><div class="in" id="tabs"></div></nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+/* ---------- Образцы карточек (на шаге 2 их будет создавать ИИ) ---------- */
+const LIB = { en: {
+  advantage:{word:"advantage",pos:"noun",meaning:"преимущество; выгода; то, что даёт лучшую позицию или увеличивает шансы на успех",level:"B1",freq:9,style:"нейтральный",
+    coll:[["take advantage of","воспользоваться"],["have an advantage over someone","иметь преимущество перед кем-то"],["gain an advantage","получить преимущество"]],
+    syn:["benefit","edge","upper hand"],ant:["disadvantage","drawback"],
+    fam:[["advantageous","выгодный"],["disadvantage","недостаток"],["disadvantaged","находящийся в невыгодном положении"]]},
+  go:{word:"go",pos:"verb",meaning:"идти; ехать; уходить; двигаться куда-либо",level:"A1",freq:10,style:"нейтральный",
+    irr:{label:"Неправильный глагол",forms:"go — went — gone",say:true},
+    coll:[["go home","идти домой"],["go for a walk","пойти погулять"],["go shopping","ходить за покупками"]],
+    syn:["move","travel","leave"],ant:["come","stay"],
+    fam:[["gone","ушедший; пропавший"],["outgoing","общительный; уходящий"],["ongoing","продолжающийся"]]},
+  child:{word:"child",pos:"noun",meaning:"ребёнок",level:"A1",freq:10,style:"нейтральный",
+    irr:{label:"Мн. ч. (нестандартное)",forms:"children",say:true},
+    coll:[["have a child","иметь ребёнка"],["raise a child","растить ребёнка"],["only child","единственный ребёнок"]],
+    syn:["kid","youngster"],ant:["adult","grown-up"],
+    fam:[["childhood","детство"],["childish","ребяческий"],["childless","бездетный"]]},
+  information:{word:"information",pos:"noun",meaning:"информация; сведения",level:"A2",freq:9,style:"нейтральный",
+    irr:{label:"Неисчисляемое",forms:"нет множественного числа: some information, a piece of information",say:false},
+    coll:[["get information","получить информацию"],["useful information","полезная информация"],["a piece of information","одно сведение, один факт"]],
+    syn:["data","details","facts"],ant:[],
+    fam:[["inform","сообщать"],["informative","информативный"],["informed","осведомлённый"]]},
+  decision:{word:"decision",pos:"noun",meaning:"решение; выбор, сделанный после размышления",level:"B1",freq:9,style:"нейтральный",
+    coll:[["make a decision","принять решение"],["difficult decision","трудное решение"],["final decision","окончательное решение"]],
+    syn:["choice","conclusion"],ant:["indecision"],
+    fam:[["decide","решать"],["decisive","решительный"],["undecided","колеблющийся, не решивший"]]},
+  improve:{word:"improve",pos:"verb",meaning:"улучшать; улучшаться",level:"B1",freq:8,style:"нейтральный",
+    coll:[["improve your English","улучшить свой английский"],["improve the quality","повысить качество"],["improve significantly","значительно улучшиться"]],
+    syn:["get better","enhance"],ant:["worsen","get worse"],
+    fam:[["improvement","улучшение"],["improved","улучшенный"]]},
+  reliable:{word:"reliable",pos:"adjective",meaning:"надёжный; достоверный",level:"B1",freq:7,style:"нейтральный",
+    coll:[["reliable source","надёжный источник"],["reliable friend","надёжный друг"],["reliable information","достоверная информация"]],
+    syn:["dependable","trustworthy"],ant:["unreliable"],
+    fam:[["rely","полагаться"],["reliability","надёжность"],["reliance","опора, зависимость"]]},
+  achieve:{word:"achieve",pos:"verb",meaning:"достигать; добиваться",level:"B1",freq:8,style:"нейтральный",
+    coll:[["achieve a goal","достичь цели"],["achieve success","добиться успеха"],["achieve results","добиться результатов"]],
+    syn:["reach","accomplish","attain"],ant:["fail"],
+    fam:[["achievement","достижение"],["achievable","достижимый"],["achiever","человек, который добивается успеха"]]},
+  mouse:{word:"mouse",pos:"noun",meaning:"мышь",level:"A1",freq:6,style:"нейтральный",
+    irr:{label:"Мн. ч. (нестандартное)",forms:"mice",say:true},
+    coll:[["computer mouse","компьютерная мышь"],["field mouse","полевая мышь"],["quiet as a mouse","тихий как мышь"]],
+    syn:[],ant:[],
+    fam:[["mousetrap","мышеловка"],["mousy","мышиный (о цвете); невзрачный"]]}
+}, tr:{} };
+/* Три примера: каждый построен на своём сочетании из карточки (1-й пример — 1-е сочетание и т.д.) */
+const EX = {
+  advantage:[["You should take advantage of the good weather and go for a walk.","Тебе стоит воспользоваться хорошей погодой и пойти погулять."],
+    ["Tall players have an advantage over shorter ones in basketball.","В баскетболе высокие игроки имеют преимущество перед низкими."],
+    ["The company gained an advantage by using new technology early.","Компания получила преимущество, раньше других начав использовать новые технологии."]],
+  go:[["I'm tired, so I want to go home.","Я устал, поэтому хочу пойти домой."],
+    ["We went for a walk after dinner.","После ужина мы пошли погулять."],
+    ["She goes shopping every Saturday.","Она ходит за покупками каждую субботу."]],
+  child:[["They want to have a child next year.","Они хотят завести ребёнка в следующем году."],
+    ["It is not easy to raise a child alone.","Растить ребёнка одному нелегко."],
+    ["I am an only child, so I have no brothers or sisters.","Я единственный ребёнок, у меня нет братьев и сестёр."]],
+  information:[["You can get information about the hotel on its website.","Информацию об отеле можно получить на его сайте."],
+    ["Thank you for the useful information!","Спасибо за полезную информацию!"],
+    ["This is an important piece of information.","Это важный факт."]],
+  decision:[["We need to make a decision by Friday.","Нам нужно принять решение до пятницы."],
+    ["Leaving my job was a difficult decision.","Уйти с работы было трудным решением."],
+    ["The final decision is yours.","Окончательное решение за тобой."]],
+  improve:[["Watching films is a good way to improve your English.","Смотреть фильмы — хороший способ улучшить свой английский."],
+    ["The company wants to improve the quality of its products.","Компания хочет повысить качество своей продукции."],
+    ["His health has improved significantly since last year.","Его здоровье значительно улучшилось с прошлого года."]],
+  reliable:[["Is this website a reliable source of news?","Этот сайт — надёжный источник новостей?"],
+    ["Tom is a reliable friend who always helps me.","Том — надёжный друг, который всегда мне помогает."],
+    ["It is hard to find reliable information about this topic.","По этой теме трудно найти достоверную информацию."]],
+  achieve:[["She worked hard to achieve her goal.","Она много работала, чтобы достичь своей цели."],
+    ["You can't achieve success without effort.","Без усилий успеха не добиться."],
+    ["We achieved good results this year.","В этом году мы добились хороших результатов."]],
+  mouse:[["My computer mouse has stopped working.","Моя компьютерная мышь перестала работать."],
+    ["A field mouse ran across the road.","Полевая мышь перебежала дорогу."],
+    ["The children were as quiet as a mouse.","Дети сидели тихо, как мыши."]]
+};
+for (const k in EX) LIB.en[k].ex = EX[k];
+const STARTER = ["advantage","go","child","information","decision","improve"];
+
+const LANGS = { en:{flag:"🇬🇧",name:"Английский",tts:"en"}, tr:{flag:"🇹🇷",name:"Турецкий",tts:"tr"} };
+const POS_RU = {noun:"существительное",verb:"глагол",adjective:"прилагательное",adverb:"наречие"};
+const INTERVALS = [1,3,7,14,30,60,120,240]; // дни
+const KNOWN_STAGE = 4; // с интервала 30 дней слово считается выученным
+const DAY = 86400000;
+
+/* ---------- Хранение ---------- */
+const KEY = "word-cards-v2";
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function dayStart(t){ const d=new Date(t??Date.now()); d.setHours(0,0,0,0); return d.getTime(); }
+function dkey(t){ const d=new Date(t??Date.now()); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+
+function freshState(){
+  const s = { lang:"en", settings:{newPerDay:10, mode:"schedule", front:"en", voice:"", rate:0.9},
+    langs:{ en:{cats:[], words:{}}, tr:{cats:[], words:{}} }, log:{}, sel:{en:"all",tr:"all"}, lastCat:{en:null,tr:null} };
+  const cat = {id:uid(), name:"Пример"};
+  s.langs.en.cats.push(cat);
+  for (const w of STARTER) addWordTo(s, "en", w, cat.id);
+  s.lastCat.en = cat.id;
+  return s;
+}
+function addWordTo(s, lang, key, catId){
+  const id = uid();
+  s.langs[lang].words[id] = { id, key, card: structuredClone(LIB[lang][key]), cats:[catId], status:"new", stage:0, due:0, note:"", added:Date.now(), started:0 };
+  return id;
+}
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)) || freshState(); } catch(e){ S = freshState(); }
+// Карточки-образцы обновляются до текущей версии (прогресс и категории не трогаются)
+for (const w of Object.values(S.langs.en.words)) if (LIB.en[w.key] && (w.card.ex||[]).length < 3) w.card = structuredClone(LIB.en[w.key]);
+/* ---------- Облако (Supabase): вход и синхронизация ---------- */
+const SB_URL = "https://pnyqgdhcemkkrzyuimbb.supabase.co";
+const SB_KEY = "sb_publishable_bPAvNlzFsogqzb4K4Nzh3w_wxj1yQXz"; // публичный ключ: доступ к данным закрыт правилами базы
+const LOCAL_ONLY = ["aiKey", "aiModel", "aiFast", "aiModels", "aiBusy", "voice"]; // настройки этого устройства
+let sb = null, sbUser = null, pushTimer = null, applying = false;
+const SY = { status:"", busy:false, err:"" };
+
+function persist(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function save(){
+  if (!applying){ S.modifiedAt = Date.now(); (S.sync ||= {}).dirty = true; schedulePush(); }
+  persist();
+}
+function cloudData(){ const d = JSON.parse(JSON.stringify(S)); LOCAL_ONLY.forEach(k=>delete d.settings[k]); delete d.sync; return d; }
+function applyCloud(d){
+  const keep = {}; LOCAL_ONLY.forEach(k=>{ if (S.settings[k]!==undefined) keep[k] = S.settings[k]; });
+  const sync = S.sync || {};
+  applying = true; S = d; S.settings = {...S.settings, ...keep}; S.sync = sync; applying = false;
+  persist();
+}
+const wordCount = d => Object.values(d.langs||{}).reduce((s,l)=>s+Object.keys(l.words||{}).length, 0);
+function schedulePush(){ if (!sbUser) return; clearTimeout(pushTimer); pushTimer = setTimeout(push, 1500); }
+async function push(){
+  if (!sb || !sbUser) return;
+  SY.busy = true; SY.err = "";
+  const {data, error} = await sb.from("user_data").upsert({user_id:sbUser.id, data:cloudData(), updated_at:new Date().toISOString()}).select("updated_at").single();
+  SY.busy = false;
+  if (error){ SY.err = "Не удалось сохранить в облако: " + error.message; }
+  else { S.sync = {...(S.sync||{}), lastRemote:data.updated_at, dirty:false, linked:sbUser.id}; SY.status = "Сохранено в облаке " + new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"}); persist(); }
+  if (V.tab==="settings") render();
+}
+async function pull(){
+  if (!sb || !sbUser || SY.busy) return;
+  SY.busy = true; SY.err = "";
+  const {data, error} = await sb.from("user_data").select("data,updated_at").maybeSingle();
+  SY.busy = false;
+  if (error){ SY.err = "Не удалось получить данные из облака: " + error.message; if (V.tab==="settings") render(); return; }
+  const sync = S.sync || {};
+  if (!data){ return push(); }                              // в облаке пусто — отправляем своё
+  if (sync.linked !== sbUser.id){                           // первый вход на этом устройстве
+    SY.ask = {remote:data, n:wordCount(data.data), m:wordCount(S)}; SY.status = ""; V.tab = "settings"; V.screen = null; return render();
+  }
+  if (data.updated_at !== sync.lastRemote){                 // в облаке есть изменения с другого устройства
+    if (!sync.dirty || (data.data.modifiedAt||0) >= (S.modifiedAt||0)){
+      applyCloud(data.data); S.sync = {...sync, lastRemote:data.updated_at, dirty:false}; persist();
+      SY.status = "Обновлено из облака"; if (!V.screen || V.tab==="settings") render(); return;
+    }
+    return push();                                          // здесь изменения новее
+  }
+  if (sync.dirty) return push();
+  SY.status = "Всё синхронизировано"; if (V.tab==="settings") render();
+}
+async function initSync(){
+  if (!window.supabase){ SY.err = "Облако недоступно: нет связи с интернетом."; return; }
+  sb = supabase.createClient(SB_URL, SB_KEY, {auth:{persistSession:true, autoRefreshToken:true}});
+  const {data} = await sb.auth.getSession();
+  sbUser = data.session?.user || null;
+  sb.auth.onAuthStateChange((ev, session)=>{ sbUser = session?.user || null; });
+  if (sbUser) pull();
+  document.addEventListener("visibilitychange", ()=>{ if (!document.hidden && sbUser) pull(); });
+  if (V.tab==="settings") render();
+}
+function authErr(e){
+  const m = e?.message || String(e);
+  if (/invalid login/i.test(m)) return "Неверная почта или пароль.";
+  if (/already registered/i.test(m)) return "Такой аккаунт уже есть — нажмите «Войти».";
+  if (/password.*(6|characters)/i.test(m)) return "Пароль слишком короткий: нужно хотя бы 6 символов.";
+  if (/email not confirmed/i.test(m)) return "Почта не подтверждена: откройте письмо от Supabase и нажмите ссылку, потом войдите.";
+  if (/rate limit/i.test(m)) return "Слишком много попыток. Подождите немного.";
+  if (/email logins are disabled|email.*disabled/i.test(m)) return "Вход по почте выключен в настройках Supabase: Authentication → Sign In / Providers → Email → включите «Enable Email provider».";
+  return m;
+}
+async function doAuth(kind){
+  const email = document.getElementById("a-email")?.value.trim(), pass = document.getElementById("a-pass")?.value || "";
+  V.authEmail = email;
+  if (!email || !pass){ SY.err = "Введите почту и пароль."; return render(); }
+  SY.busy = true; SY.err = ""; render();
+  try {
+    const {data, error} = kind==="up" ? await sb.auth.signUp({email, password:pass}) : await sb.auth.signInWithPassword({email, password:pass});
+    if (error) throw error;
+    sbUser = data.session?.user || null;
+    SY.busy = false;
+    if (!sbUser){ SY.status = "Аккаунт создан. Подтвердите почту по ссылке из письма, затем нажмите «Войти»."; return render(); }
+    SY.status = "Вы вошли"; render(); pull();
+  } catch(e){ SY.busy = false; SY.err = authErr(e); render(); }
+}
+function viewAccount(){
+  if (SY.ask) return `<div class="card"><b>Облако и синхронизация</b>
+    <p style="margin:8px 0 12px">В облаке уже есть ваши данные: <b>${SY.ask.n} слов</b>. На этом устройстве сейчас <b>${SY.ask.m} слов</b>. Что оставить?</p>
+    <button class="btn" data-act="takecloud">Взять данные из облака</button>
+    <button class="btn sec" data-act="takelocal">Отправить это устройство в облако</button>
+    <p class="small muted" style="margin:8px 0 0">Обычно нужно первое. Второе заменит данные в облаке данными этого устройства.</p></div>`;
+  if (!sb) return `<div class="card"><b>Облако</b><p class="small muted" style="margin:6px 0 0">${esc(SY.err || "Загрузка…")}</p></div>`;
+  const msg = (SY.err ? `<div class="notice warn">${esc(SY.err)}</div>` : "") + (SY.status && !SY.err ? `<div class="notice ok">${esc(SY.status)}</div>` : "");
+  if (!sbUser) return `<div class="card"><b>Облако и синхронизация</b>
+    <p class="small muted" style="margin:6px 0 10px">Войдите, чтобы слова и прогресс хранились в облаке и были одинаковыми на всех устройствах.</p>
+    <input class="full" id="a-email" type="email" placeholder="Почта" autocomplete="username" autocapitalize="off" value="${esc(V.authEmail||"")}">
+    <input class="full" id="a-pass" type="password" placeholder="Пароль (не меньше 6 символов)" autocomplete="current-password" style="margin-top:8px">
+    <div class="row rate" style="margin-top:10px"><button class="btn sec" data-act="signup" ${SY.busy?"disabled":""}>Создать аккаунт</button><button class="btn" data-act="signin" ${SY.busy?"disabled":""}>Войти</button></div>${msg}</div>`;
+  return `<div class="card"><b>Облако и синхронизация</b>
+    <p class="small muted" style="margin:6px 0 10px">Вы вошли как <b>${esc(sbUser.email||"")}</b>. Изменения сохраняются в облако автоматически.</p>
+    <div class="row rate"><button class="btn sec" data-act="syncnow" ${SY.busy?"disabled":""}>${SY.busy?"Синхронизация…":"Синхронизировать"}</button><button class="btn sec" data-act="signout">Выйти</button></div>${msg}</div>`;
+}
+
+
+/* ---------- Озвучка ---------- */
+let voices = [];
+function loadVoices(){ try { voices = speechSynthesis.getVoices(); } catch(e){ voices=[]; } }
+if ("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (V.tab==="settings") render(); }; }
+function langVoices(lang){ return voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(LANGS[lang].tts)); }
+function pickVoice(lang){
+  const list = langVoices(lang);
+  if (S.settings.voice){ const v = list.find(v=>v.voiceURI===S.settings.voice); if (v) return v; }
+  const good = /(premium|enhanced|natural|neural|samantha|daniel|google)/i;
+  return list.find(v=>good.test(v.name) && /en-(us|gb)/i.test(v.lang)) || list.find(v=>/en-(us|gb)/i.test(v.lang)) || list[0] || null;
+}
+function speak(text, rate){
+  if (!("speechSynthesis" in window) || !text) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const v = pickVoice(S.lang); if (v){ u.voice = v; u.lang = v.lang; } else u.lang = S.lang==="en" ? "en-US" : "tr-TR";
+    u.rate = rate || S.settings.rate;
+    speechSynthesis.speak(u);
+  } catch(e){}
+}
+
+/* ---------- ИИ (Gemini) ---------- */
+const API = "https://generativelanguage.googleapis.com/v1beta";
+const LEVELS = ["A1","A2","B1","B2","C1","C2"];
+function aiReady(){ return !!(S.settings.aiKey && S.settings.aiModel); }
+function aiError(status, body){
+  const m = (body && body.error && body.error.message) || "";
+  if (status===400 && /api.?key/i.test(m)) return "Ключ не подходит. Проверьте его в «Настройках».";
+  if (status===401 || status===403) return "Нет доступа с этим ключом. Проверьте его в «Настройках».";
+  if (status===404) return "Модель не найдена. Нажмите «Проверить ключ» в «Настройках».";
+  if (status===429) return "Достигнут лимит бесплатных запросов. Подождите минуту и попробуйте снова.";
+  if (status>=500) return "Сервис ИИ сейчас перегружен. Попробуйте ещё раз чуть позже.";
+  return "Ошибка ИИ (" + status + ")" + (m ? ": " + m : "");
+}
+async function aiFetch(path, opts={}){
+  let r;
+  const ctl = new AbortController(), timer = setTimeout(()=>ctl.abort(), 30000);
+  try { r = await fetch(API + path, {...opts, signal:ctl.signal, headers:{"Content-Type":"application/json", "x-goog-api-key":S.settings.aiKey}}); }
+  catch(e){ const err = new Error(e.name==="AbortError" ? "ИИ отвечает слишком долго. Попробуйте ещё раз." : "Нет связи с ИИ. Проверьте интернет."); err.status = 0; throw err; }
+  finally { clearTimeout(timer); }
+  if (!r.ok){ let b={}; try { b = await r.json(); } catch(e){} const err = new Error(aiError(r.status, b)); err.status = r.status; err.raw = b?.error?.message || ""; throw err; }
+  return r.json();
+}
+const noThink = new Set(); // модели, которые не принимают настройку «минимум размышлений»
+// fast = true — быстрая модель (разбор слова), иначе основная (карточки и примеры).
+// Если модель перегружена или недоступна, автоматически пробуем следующую.
+async function gemini(prompt, schema, fast=false){
+  if (!aiReady()) throw new Error("Сначала добавьте ключ ИИ в «Настройках».");
+  const first = fast ? (S.settings.aiFast || S.settings.aiModel) : S.settings.aiModel;
+  const busy = S.settings.aiBusy || (S.settings.aiBusy = {}), now = Date.now();
+  const all = [first, ...(S.settings.aiModels||[]).map(m=>m.id).filter(id=>id!==first)];
+  // перегруженные недавно модели — в конец очереди на 15 минут
+  const order = [...all.filter(id=>!(busy[id] > now)), ...all.filter(id=>busy[id] > now)].slice(0, 4);
+  let lastErr;
+  for (const model of order){
+    const gen = {responseMimeType:"application/json", responseSchema:schema, temperature:0.7};
+    if (!noThink.has(model)) gen.thinkingConfig = {thinkingLevel:"minimal"};
+    try {
+      const j = await aiFetch(`/models/${encodeURIComponent(model)}:generateContent`, {method:"POST", body:JSON.stringify({contents:[{role:"user", parts:[{text:prompt}]}], generationConfig:gen})});
+      const text = (j.candidates?.[0]?.content?.parts || []).filter(p=>!p.thought).map(p=>p.text||"").join("");
+      try { return JSON.parse(text); } catch(e){ lastErr = new Error("ИИ ответил непонятно. Попробуйте ещё раз."); continue; }
+    } catch(e){
+      lastErr = e;
+      if (e.status===400 && /thinking/i.test(e.raw) && gen.thinkingConfig){ noThink.add(model); order.splice(order.indexOf(model)+1, 0, model); continue; } // повторить ту же модель без этой настройки
+      if (e.status===429 || e.status===404 || e.status>=500 || e.status===0){ busy[model] = Date.now() + 15*60000; save(); continue; } // перегружена / нет доступа — следующая модель
+      throw e;
+    }
+  }
+  throw lastErr;
+}
+async function aiModels(){
+  const j = await aiFetch(`/models?pageSize=200`);
+  return (j.models||[])
+    .filter(m => (m.supportedGenerationMethods||[]).includes("generateContent") && /flash/i.test(m.name) && !/(image|tts|audio|live|embed|vision|8b|omni)/i.test(m.name))
+    .map(m => { const id = m.name.replace(/^models\//,""), v = parseFloat((id.match(/gemini-(\d+(?:\.\d+)?)/)||[])[1]||0);
+      return {id, name:m.displayName||id, score: v*10 - (/lite/i.test(id)?3:0) - (/(preview|exp)/i.test(id)?6:0) - (/-\d{3}$/.test(id)?0.5:0)}; })
+    .sort((a,b)=>b.score-a.score).map(({id,name})=>({id,name}));
+}
+
+const STR = {type:"STRING"}, BOOL = {type:"BOOLEAN"}, LVL = {type:"STRING", enum:LEVELS};
+const ARR = items => ({type:"ARRAY", items});
+const OBJ = props => ({type:"OBJECT", properties:props, required:Object.keys(props)});
+const PAIR = OBJ({en:STR, ru:STR});
+const SCH_ANALYZE = OBJ({isEnglish:BOOL, headword:STR, correction:STR, alternatives:ARR(OBJ({headword:STR, note:STR})), senses:ARR(OBJ({ru:STR, level:LVL}))});
+const SCH_CARD = OBJ({pos:STR, patterns:ARR(PAIR), meaning:STR, level:LVL, freq:{type:"INTEGER"}, style:STR, irregular:OBJ({has:BOOL, label:STR, forms:STR, speak:BOOL}),
+  collocations:ARR(PAIR), examples:ARR(PAIR), synonyms:ARR(STR), antonyms:ARR(STR), family:ARR(PAIR)});
+const SCH_EX = OBJ({en:STR, ru:STR, level:LVL});
+
+function promptAnalyze(text, exact){
+  return `You help a Russian-speaking learner of English make vocabulary flashcards.
+The learner typed: «${text}»
+${exact ? "1. Use exactly this as the headword (the learner already chose it). correction = empty string, alternatives = empty array." :
+`1. Fix spelling mistakes and convert it to the dictionary (base) form: verbs → infinitive without "to"; nouns → singular; adjectives/adverbs → positive degree; phrases → base form (e.g. "took advantage of" → "take advantage of", "went" → "go", "children" → "child", "better" → "good"). Keep phrasal verbs and idioms as whole phrases. Use lowercase unless it is a proper noun.
+2. correction: a short explanation in Russian of what you changed, e.g. "прошедшее время от go", "множественное число от child", "исправлена опечатка". Empty string if nothing changed.
+3. alternatives: only if the typed form can also belong to a DIFFERENT dictionary word (e.g. "left" → "leave" (уходить) or the adjective "left" (левый)), list the other options: headword + short Russian note. Otherwise an empty array.`}
+4. senses: group the meanings of the headword. Similar or related meanings must be ONE group (e.g. "bad": плохой, нехороший, вредный, испорченный — one group). Make separate groups only for really different meanings that a learner must tell apart, which is common for phrasal verbs (e.g. "bring up": воспитывать / поднимать тему / стошнить; "bank": банк / берег реки). Each group: ru (main Russian translations, 1–5 words) and level (CEFR). If there is basically one meaning, return exactly one group. At most 5 groups, most common first.
+5. isEnglish: false if the input is not English at all.`;
+}
+function promptCard(head, sense, avoid){
+  return `${avoid ? `IMPORTANT: these collocations overlap the patterns, do not use them: ${avoid.join("; ")}.\n` : ""}Create ONE vocabulary flashcard for a Russian-speaking learner of English.
+Word: «${head}». ${sense ? `The card covers ONLY this meaning: «${sense.ru}» (level about ${sense.level}). Translations, collocations and examples must all be about this meaning only.` : "The card covers the word as a whole: put all its common meanings into this one card (merge similar meanings, do not split them)."}
+All Russian must be natural Russian. All English must be natural, modern English. Double-check spelling of every English word.
+- pos: part(s) of speech in English, e.g. "adjective" or "noun, verb" (most common first).
+- patterns: ONLY the grammar of the headword itself: the preposition or structure that directly follows THIS word and must be learned with it (government). Examples: "wait for someone/something", "manage to do something", "depend on something", "interested in something", "good at doing something", "advantage over someone/something", "afraid of something". For a phrasal-verb headword it may show object position ("bring someone up / bring up someone"). Rules: write the headword plus its preposition/structure only — no extra verbs or articles around it (not "take advantage of", not "have an advantage over"); NEVER list phrasal verbs (verb + particle with its own meaning, e.g. "go on", "give up", "look after") — those are separate words. en with "someone / something / doing something / to do something"; ru: short Russian equivalent. Up to 2. Empty array if the word has no such government (most nouns and many adjectives have none).
+- meaning: the main Russian translations of all common meanings, most common first, similar ones grouped, separated by "; ", then "; " and a short Russian explanation of the main meaning. Example: "плохой; нехороший; вредный; серьёзный (о проблеме); то, что не отвечает нормам или приносит вред".
+- level: CEFR level of the most common meaning. freq: integer 1–10, how common the word is in modern English (10 = extremely common). style: 1–2 Russian words (нейтральный, разговорный, формальный, книжный, сленг…).
+- irregular: has=true only if something is irregular: irregular verb (label "Неправильный глагол", forms like "go — went — gone", speak=true); irregular plural (label "Мн. ч. (нестандартное)", forms like "children", speak=true); uncountable noun (label "Неисчисляемое", forms = short Russian note like "нет множественного числа: some information, a piece of information", speak=false); irregular comparison (label "Неправильные степени сравнения", forms like "bad — worse — worst", speak=true). Otherwise has=false with empty strings.
+- collocations: exactly 3. Choose yourself the most frequent and useful collocations or set phrases with this word in everyday modern English (across its meanings, most frequent first). A collocation is always this word together with other words (never a single word like a derivative or antonym). Set phrases with other words belong HERE, and the most important one must not be missed (e.g. for "advantage": "take advantage of"; for "decision": "make a decision"). They must NOT repeat or rephrase the patterns, and must NOT be phrasal verbs of this word (those are separate words); en + ru.
+- examples: exactly 3 natural, short, clear sentences at about the word's level. Example 1 must use collocation 1, example 2 collocation 2, example 3 collocation 3 (a collocation may be inflected). en + natural Russian translation.
+- synonyms: up to 4; antonyms: up to 3 (empty array if none). English, single words or short phrases.
+- family: 2–4 words of the same word family (derivatives), not the headword itself; en + ru.`;
+}
+function promptExample(c, i, mode){
+  const cur = c.ex[i], lvl = cur[2] || c.level, li = Math.max(0, LEVELS.indexOf(lvl));
+  const target = mode==="easier" ? LEVELS[Math.max(0, li-1)] : mode==="harder" ? LEVELS[Math.min(5, li+1)] : lvl;
+  const how = mode==="easier" ? " It must be simpler than the current one: shorter, easier words and grammar." : mode==="harder" ? " It must be more advanced than the current one: richer vocabulary and grammar." : "";
+  return {target, prompt:`Write one example sentence for a vocabulary flashcard for a Russian-speaking learner of English.
+Word: «${c.word}» (${c.pos}), meaning: «${c.meaning}».
+The sentence must use the collocation «${(c.coll[i]||c.coll[0]||[c.word])[0]}» (it may be inflected).
+Current sentence: «${cur[0]}». Write a NEW, different, natural sentence at CEFR level ${target}.${how}
+Return en, ru (natural Russian translation) and level.`};
+}
+// Сочетания, которые по сути повторяют блок «Употребляется»
+function overlapColl(card){
+  const norm = s => " " + s.toLowerCase().replace(/someone's|somebody's|one's|someone|somebody|something|doing|to do|sb|sth|[\/(),.]/g, " ").replace(/\s+/g, " ").trim() + " ";
+  const hw = new Set(norm(card.word).trim().split(" "));
+  // конструкция должна добавлять к слову что-то своё (для фразовых глаголов «bring someone up» = просто само слово)
+  const pats = (card.pat||[]).map(p=>norm(p[0])).filter(p=>p.trim().split(" ").some(x=>!hw.has(x)));
+  return card.coll.filter(c=>{ const x = norm(c[0]); return pats.some(p=>x.includes(p) || p.includes(x)); }).map(c=>c[0]);
+}
+async function aiCard(head, sense){
+  let card = buildCard(head, await gemini(promptCard(head, sense), SCH_CARD), sense);
+  const dup = overlapColl(card);
+  if (dup.length){ // одна повторная попытка с явным запретом
+    try { const again = buildCard(head, await gemini(promptCard(head, sense, dup), SCH_CARD), sense);
+      if (again.coll.length && again.ex.length && overlapColl(again).length < dup.length) card = again; } catch(e){}
+  }
+  return card;
+}
+function buildCard(head, r, sense){
+  const pairs = a => (a||[]).filter(x => x && x.en).map(x => [x.en, x.ru||""]);
+  const lvl = LEVELS.includes(r.level) ? r.level : "B1";
+  return { word:head, sense:sense?.ru||"", pos:r.pos||"", pat:pairs(r.patterns).slice(0,3), meaning:r.meaning||"", level:lvl,
+    freq:Math.max(1, Math.min(10, Math.round(+r.freq||5))), style:r.style||"нейтральный",
+    irr: r.irregular?.has && r.irregular.forms ? {label:r.irregular.label||"Особая форма", forms:r.irregular.forms, say:!!r.irregular.speak} : null,
+    coll:pairs(r.collocations).slice(0,3), ex:pairs(r.examples).slice(0,3).map(p=>[p[0], p[1], lvl]),
+    syn:(r.synonyms||[]).slice(0,4), ant:(r.antonyms||[]).slice(0,3), fam:pairs(r.family).slice(0,4) };
+}
+
+/* ---------- Помощники ---------- */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+const spk = t => `<button class="spk" data-say="${esc(t)}" aria-label="Озвучить">${SPK}</button>`;
+const say = t => `<span class="say" data-say="${esc(t)}">${esc(t)}</span>`;
+const L = () => S.langs[S.lang];
+const words = () => Object.values(L().words);
+function inCat(w, catId){ return catId==="all" || w.cats.includes(catId); }
+function catName(id){ const c = L().cats.find(c=>c.id===id); return c ? c.name : "—"; }
+function isKnown(w){ return w.status==="skipped" || (w.status==="learning" && w.stage>=KNOWN_STAGE); }
+function statusChip(w){
+  if (w.status==="new") return '<span class="chip">новое</span>';
+  if (isKnown(w)) return '<span class="chip known">выучено</span>';
+  return '<span class="chip learning">на изучении</span>';
+}
+function LOG(){ return S.log[S.lang] || (S.log[S.lang]={}); }
+function logDay(){ const k=dkey(), g=LOG(); return g[k] || (g[k]={reviews:0,started:0}); }
+function startedToday(){ return (LOG()[dkey()]||{}).started||0; }
+function dueWords(catId){ const end = dayStart()+DAY; return words().filter(w=>inCat(w,catId) && w.status==="learning" && w.due < end); }
+function reviewPool(catId){
+  if (S.settings.mode==="schedule") return dueWords(catId);
+  return words().filter(w=>inCat(w,catId) && w.status==="learning");
+}
+function newWords(catId){ return words().filter(w=>inCat(w,catId) && w.status==="new").sort((a,b)=>a.added-b.added); }
+function newLeft(){ return Math.max(0, S.settings.newPerDay - startedToday()); }
+function streak(){
+  let n=0, t=dayStart();
+  const active = k => { const d=LOG()[k]; return d && (d.reviews>0 || d.started>0 || d.trained>0); };
+  if (!active(dkey(t))) t -= DAY; // сегодня ещё не занимался — серия не прервана
+  while (active(dkey(t))){ n++; t -= DAY; }
+  return n;
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+/* ---------- Состояние экрана ---------- */
+let V = { tab:"learn", screen:null, menu:false };
+
+/* ---------- Отрисовка карточки ---------- */
+function renderCard(w){
+  const c = w.card;
+  const list = (arr) => arr.map(x => `<li>${say(x[0])} <span class="muted">— ${esc(x[1])}</span></li>`).join("");
+  const words = (arr) => arr.map(x => say(x)).join(", ");
+  let h = `<div class="card">
+    <div class="w-head"><span class="w-word">${esc(c.word)}</span> ${spk(c.word)} <span class="w-pos">${esc(c.pos)}</span></div>
+    ${(c.pat||[]).length ? `<div class="pat"><span class="small muted">Употребляется:</span>${c.pat.map(p=>`<div>${say(p[0])} <span class="muted">— ${esc(p[1])}</span></div>`).join("")}</div>` : ""}
+    <p style="margin:10px 0 0">${esc(c.meaning)}</p>
+    ${w.seenAs ? `<p class="small muted" style="margin:4px 0 0">Встретилось как: ${say(w.seenAs)}</p>` : ""}
+    <div class="meta"><span class="chip">Уровень: ${esc(c.level)}</span><span class="chip">Частотность: ${c.freq}/10</span><span class="chip">Стиль: ${esc(c.style)}</span></div>`;
+  if (c.irr) h += `<div class="irr"><b>${esc(c.irr.label)}:</b> ${c.irr.say ? `<span class="say" data-say="${esc(c.irr.forms.replace(/—/g,","))}">${esc(c.irr.forms)}</span>` : esc(c.irr.forms)}</div>`;
+  h += `<h3>Сочетания</h3><ul class="plain">${list(c.coll)}</ul>`;
+  h += `<h3>Примеры (${esc(c.level)})</h3>`;
+  c.ex.forEach((e,i) => {
+    const busy = V.exBusy && V.exBusy.wid===w.id && V.exBusy.i===i, msg = V.exMsg && V.exMsg.wid===w.id && V.exMsg.i===i ? V.exMsg.msg : "";
+    const lv = e[2] && e[2]!==c.level ? ` <span class="chip">${esc(e[2])}</span>` : "";
+    h += `<div class="ex"><div>${say(e[0])}${lv}</div>
+      <div class="tr"><button class="reveal" data-reveal="${i}">Показать перевод</button><span class="muted" id="tr${i}" hidden>${esc(e[1])}</span></div>
+      ${busy ? `<div class="busy small"><span class="spin"></span>ИИ пишет новый пример…</div>`
+        : `<div class="exbtns">${[["replace","Заменить"],["easier","Проще"],["harder","Сложнее"]].map(([m,t])=>`<button data-exm="${m}" data-exi="${i}" data-exw="${w.id}" ${V.exBusy?"disabled":""}>${t}</button>`).join("")}</div>`}
+      ${msg ? `<div class="small" style="color:var(--bad);margin-top:6px">${esc(msg)}</div>` : ""}</div>`;
+  });
+  if (c.syn.length) h += `<p style="margin:14px 0 4px"><b>Синонимы:</b> ${words(c.syn)}</p>`;
+  if (c.ant.length) h += `<p style="margin:4px 0"><b>Антонимы:</b> ${words(c.ant)}</p>`;
+  h += `<h3>Семья слов</h3><ul class="plain">${list(c.fam)}</ul>`;
+  h += `<p class="small muted" style="margin:10px 0 0">Категории: ${w.cats.map(id=>esc(catName(id))).join(", ")} · ${statusChip(w)}</p>`;
+  return h + `</div>`;
+}
+
+/* ---------- Экраны ---------- */
+function flagHtml(){
+  return `<div class="rel"><button class="flag" data-act="langmenu">${LANGS[S.lang].flag} ${LANGS[S.lang].name} ▾</button>
+    ${V.menu ? `<div class="menu">${Object.entries(LANGS).map(([k,l])=>`<button data-lang="${k}" class="${k===S.lang?"on":""}"><span>${l.flag}</span><span>${l.name}</span>${k===S.lang?`<span class="ck">✓</span>`:""}</button>`).join("")}</div>` : ""}</div>`;
+}
+function header(title, opts={}){
+  const left = opts.back ? `<button class="back" data-act="back">‹ Назад</button>` : (opts.left || `<h1>${esc(title)}</h1>`);
+  return `<header class="top${opts.left ? " static" : ""}">${left}${opts.flag ? flagHtml() : ""}</header>`;
+}
+
+/* ---------- Прогресс ---------- */
+const WD = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
+function ring(val, max, cls, label){
+  const r = 34, C = 2*Math.PI*r, p = max ? Math.min(1, val/max) : 0;
+  return `<div class="ring"><div class="rwrap"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="${r}" class="rt"/>
+    ${p>0 ? `<circle cx="40" cy="40" r="${r}" class="rv ${cls}" style="--len:${(p*C).toFixed(1)};--c:${C.toFixed(1)}" transform="rotate(-90 40 40)"/>` : ""}</svg>
+    <div class="rc"><b>${val}</b><span>${max ? "из "+max : "на сегодня нет"}</span></div></div><div class="rl">${label}</div></div>`;
+}
+function stackBar(n, l, k){
+  const t = n+l+k || 1;
+  return `<div class="stack"><i class="s-new" style="width:${n*100/t}%"></i><i class="s-learn" style="width:${l*100/t}%"></i><i class="s-known" style="width:${k*100/t}%"></i></div>
+    <div class="legend"><span><i class="s-new"></i>новые <b>${n}</b></span><span><i class="s-learn"></i>на изучении <b>${l}</b></span><span><i class="s-known"></i>выучено <b>${k}</b></span></div>`;
+}
+function counts(list){
+  const k = list.filter(isKnown).length, l = list.filter(w=>w.status==="learning" && !isKnown(w)).length;
+  return [list.length-k-l, l, k];
+}
+function viewProgress(sel){
+  const g = LOG(), days = [];
+  for (let i=6;i>=0;i--){ const t=Date.now()-i*DAY, d=g[dkey(t)]||{}; days.push({wd:WD[new Date(t).getDay()], n:(d.reviews||0)+(d.started||0)+(d.trained||0), today:i===0}); }
+  const max = Math.max(1, ...days.map(d=>d.n)), week = days.reduce((a,d)=>a+d.n,0);
+  const td = g[dkey()]||{}, reviewed = td.reviews||0, due = dueWords("all").length, st = streak();
+  const [n,l,k] = counts(words());
+  let h = `<h2>Мой прогресс</h2>
+  <div class="card"><div class="small muted" style="margin-bottom:10px">Цель на сегодня</div>
+    <div class="rings">${ring(td.started||0, S.settings.newPerDay, "r-new", "новые слова")}${ring(reviewed, reviewed+due, "r-rev", "повторение")}</div></div>
+  <div class="card streak"><div class="st-top"><div><b class="st-n">${st}</b> <span>${plural(st,"день","дня","дней")} подряд</span></div>
+    <span class="small muted">${st ? "Не прерывайте серию" : "Начните серию сегодня"}</span></div>
+    <div class="dots">${days.map(d=>`<div class="dot ${d.n?"on":""} ${d.today?"today":""}"><i></i><span>${d.wd}</span></div>`).join("")}</div></div>
+  <div class="card"><div class="st-top"><span class="small muted">Активность за неделю</span><b>${week}</b></div>
+    <div class="chart">${days.map(d=>`<div class="col"><div class="barv"><i style="height:${d.n*100/max}%" class="${d.today?"today":""}"></i></div><span class="${d.today?"on":""}">${d.wd}</span></div>`).join("")}</div></div>
+  <div class="card"><div class="st-top"><span class="small muted">Все слова</span><b>${words().length}</b></div>${stackBar(n,l,k)}</div>`;
+  if (sel!=="all"){
+    const [cn,cl,ck] = counts(words().filter(w=>inCat(w,sel)));
+    const pct = cn+cl+ck ? Math.round(ck*100/(cn+cl+ck)) : 0;
+    h += `<div class="card"><div class="st-top"><b>${esc(catName(sel))}</b><b class="pct">${pct}%</b></div>${stackBar(cn,cl,ck)}</div>`;
+  }
+  return h;
+}
+function plural(n,a,b,c){ const m10=n%10, m100=n%100; return m10===1&&m100!==11?a : m10>=2&&m10<=4&&(m100<10||m100>=20)?b : c; }
+
+function viewLearn(){
+  const sel = L().cats.some(c=>c.id===S.sel[S.lang]) ? S.sel[S.lang] : "all";
+  const nw = newWords(sel), rp = reviewPool(sel);
+  const canNew = Math.min(nw.length, newLeft());
+  let h = header("",{flag:true, left:`<label class="cat-title" for="catsel">Категория</label>`});
+  if (S.lang==="tr") h += `<div class="notice">Турецкая карточка и методика ещё не готовы — делаем после английского. Категории и слова уже можно заводить.</div>`;
+  h += `<select class="full catsel" id="catsel"><option value="all">Все слова</option>${L().cats.map(c=>`<option value="${c.id}" ${c.id===sel?"selected":""}>${esc(c.name)}</option>`).join("")}</select>
+    <div style="margin-top:16px">
+      <button class="btn" data-act="startnew" ${canNew?"":"disabled"}>Учить новые слова${canNew?` (${canNew})`:""}</button>
+      <button class="btn sec" data-act="startreview" ${rp.length?"":"disabled"}>Повторить слова${rp.length?` (${rp.length})`:""}</button>
+    </div>`;
+  if (!canNew && nw.length && !newLeft()) h += `<p class="small muted hint">Дневная норма новых слов (${S.settings.newPerDay}) выполнена. Изменить можно в настройках.</p>`;
+  if (!nw.length && !rp.length) h += `<p class="small muted hint">${words().filter(w=>inCat(w,sel)).length ? "На сегодня всё. Новых слов нет, повторять пока нечего." : "Здесь пока нет слов. Добавьте их в «Словаре»."}</p>`;
+
+  return h + viewProgress(sel);
+}
+
+function viewDict(){
+  let h = header("Словарь",{flag:true});
+  h += `<div class="list">${L().cats.map(c=>{ const n=words().filter(w=>w.cats.includes(c.id)).length;
+      return `<button class="item" data-cat="${c.id}"><span>${esc(c.name)}</span><span class="muted small">${n} ›</span></button>`; }).join("") || `<div class="item muted">Категорий пока нет</div>`}</div>`;
+  h += V.addCat
+    ? `<div class="card"><input class="full" id="newcat" placeholder="Название категории, например книга" maxlength="60"><div class="row" style="margin-top:10px"><button class="btn sec" data-act="cancelcat">Отмена</button><button class="btn" data-act="savecat">Создать</button></div></div>`
+    : `<button class="addbtn" data-act="addcat">+ Добавить категорию</button>`;
+  return h;
+}
+
+function addForm(){
+  const a = V.adding;
+  if (!L().cats.length) return `<div class="card"><div class="notice" style="margin-top:0">Сначала создайте категорию: «+ Добавить категорию».</div><button class="btn sec" data-act="canceladd">Закрыть</button></div>`;
+  const catSel = `<label class="set small" for="addcatsel" style="margin:12px 0 4px">В категорию</label>
+    <select class="full" id="addcatsel">${L().cats.map(c=>`<option value="${c.id}" ${c.id===a.cat?"selected":""}>${esc(c.name)}</option>`).join("")}</select>`;
+  if (a.busy) return `<div class="card"><div class="busy"><span class="spin"></span>${esc(a.busy)}</div><button class="btn sec" data-act="canceladd" style="margin-top:12px">Отмена</button></div>`;
+  if (a.res){
+    const r = a.res, ex = existingFor(r.headword), multi = (r.senses||[]).length > 1;
+    const block = ex.find(w=>!w.card.sense) || (!multi && ex[0]), here = block && block.cats.includes(a.cat);
+    let h = `<div class="card"><div class="w-head"><span class="w-word" style="font-size:24px">${esc(r.headword)}</span> ${spk(r.headword)}</div>`;
+    if (r.correction) h += `<p class="small muted" style="margin:6px 0 0">Вы ввели: <b>${esc(a.text)}</b> → ${esc(r.correction)}</p>`;
+    if ((r.alternatives||[]).length) h += `<div class="notice">Может, вы имели в виду: ${r.alternatives.map((x,i)=>`<button class="reveal" data-alt="${i}">${esc(x.headword)}</button> — ${esc(x.note)}`).join("; ")}</div>`;
+    if (block){
+      h += `<div class="notice warn">${here ? "Это слово уже есть в этой категории." : `Это слово уже есть в категории «${esc(block.cats.map(catName).join("», «"))}».`}</div>`;
+      return h + catSel + `<div class="row" style="margin-top:12px"><button class="btn sec" data-act="canceladd">Отмена</button>${here ? "" : `<button class="btn" data-addhere="${block.id}">Добавить и сюда</button>`}</div>${a.msg||""}</div>`;
+    }
+    if (multi){
+      const has = s => ex.find(w=>(w.card.sense||"").toLowerCase()===s.ru.toLowerCase());
+      h += `<div class="small" style="margin:12px 0 2px;font-weight:600">В каком значении?</div>` + r.senses.map((s,i)=>{ const w = has(s);
+        return `<label class="mean ${w?"dis":""}"><input type="radio" name="sense" data-pick="${i}" ${a.pick===i?"checked":""} ${w?"disabled":""}><span><b>${esc(s.ru)}</b> <span class="muted small">${esc(s.level)}${w?" · уже есть":""}</span>${w && !w.cats.includes(a.cat) ? ` <button class="reveal" data-addhere="${w.id}">добавить и сюда</button>` : ""}</span></label>`; }).join("")
+        + `<label class="mean"><input type="radio" name="sense" data-pick="all" ${a.pick==="all"?"checked":""}><span><b>Все значения в одной карточке</b></span></label>`;
+    }
+    h += catSel + `<div class="row" style="margin-top:12px"><button class="btn sec" data-act="canceladd">Отмена</button><button class="btn" data-act="makecards" ${multi && a.pick==null ? "disabled" : ""}>Создать карточку</button></div>${a.msg||""}</div>`;
+
+    return h;
+  }
+  return `<div class="card"><input class="full" id="newword" placeholder="Слово или словосочетание" value="${esc(a.text||"")}" autocapitalize="off" autocomplete="off" spellcheck="false">
+    ${catSel}
+    <div class="row" style="margin-top:12px"><button class="btn sec" data-act="canceladd">Отмена</button><button class="btn" data-act="createword">Создать карточку</button></div>${a.msg||""}</div>`;
+}
+function existingFor(head){ const k = head.toLowerCase(); return words().filter(w=>w.card.word.toLowerCase()===k); }
+function defaultAddCat(){
+  if (V.screen?.type==="cat") return V.screen.id;
+  const last = S.lastCat[S.lang];
+  return L().cats.some(c=>c.id===last) ? last : L().cats[0]?.id;
+}
+
+function viewCategory(catId){
+  const list = words().filter(w=>w.cats.includes(catId)).sort((a,b)=>a.card.word.localeCompare(b.card.word));
+  let h = header("",{back:true}) + `<h1 class="page-title">${esc(catName(catId))}</h1>`;
+  h += `<div class="list">${list.map(w=>`<button class="item" data-word="${w.id}"><span><b>${esc(w.card.word)}</b> <span class="muted small">— ${esc(w.card.meaning.split(";")[0])}</span></span>${statusChip(w)}</button>`).join("") || `<div class="item muted">В категории пока нет слов</div>`}</div>`;
+  const only = list.filter(w=>w.cats.length===1).length, shared = list.length - only;
+  h += V.catDelAsk===catId
+    ? `<div class="card"><b>Удалить категорию «${esc(catName(catId))}»?</b>
+        <p class="small muted" style="margin:6px 0 12px">${only ? `Удалятся слова только из этой категории: ${only}, вместе с прогрессом. ` : ""}${shared ? `Слова, которые есть и в других категориях (${shared}), останутся там. ` : ""}Это нельзя отменить.</p>
+        <div class="row rate"><button class="btn sec" data-act="catdelcancel">Отмена</button><button class="btn danger" data-act="catdel">Удалить</button></div></div>`
+    : `<button class="btn sec" data-act="catdelask" style="color:var(--bad);margin-bottom:12px">Удалить категорию</button>`;
+  return h;
+}
+
+function viewWord(id){
+  const w = L().words[id];
+  if (!w) return header("",{back:true}) + `<p class="muted hint">Слово не найдено.</p>`;
+  const fromCat = V.screen?.from?.type==="cat" && w.cats.length>1 ? V.screen.from.id : null;
+  const del = V.delAsk===id
+    ? `<div class="card"><b>Удалить «${esc(w.card.word)}»?</b><p class="small muted" style="margin:6px 0 12px">Карточка и прогресс по ней удалятся${w.cats.length>1 ? ` из всех категорий (${w.cats.length})` : ""}. Это нельзя отменить.</p>
+        ${fromCat ? `<button class="btn sec" data-act="uncat">Убрать только из «${esc(catName(fromCat))}»</button>` : ""}
+        <div class="row" style="margin-top:10px"><button class="btn sec" data-act="delcancel">Отмена</button><button class="btn danger" data-act="delword">Удалить</button></div></div>`
+    : `<button class="btn sec" data-act="delask" style="color:var(--bad);margin-top:4px">Удалить слово</button>`;
+  return header("",{back:true}) + renderCard(w) + `<button class="btn" data-act="train" data-wid="${w.id}" style="margin-bottom:10px">Тренировка</button>` + del;
+}
+
+// Карточка в занятии: сначала коротко, полностью — по кнопке «Развернуть»
+function cardBlock(w, s){
+  const c = w.card;
+  if (s.expanded) return renderCard(w) + `<button class="btn" data-act="train" data-wid="${w.id}">Тренировка</button>
+    <button class="btn sec" data-act="collapse" style="margin:10px 0 12px">Свернуть ▴</button>`;
+  return `<div class="card">
+    <div class="w-head"><span class="w-word">${esc(c.word)}</span> ${spk(c.word)} <span class="w-pos">${esc(c.pos)}</span></div>
+    ${(c.pat||[]).length ? `<div class="pat"><span class="small muted">Употребляется:</span>${c.pat.map(p=>`<div>${say(p[0])} <span class="muted">— ${esc(p[1])}</span></div>`).join("")}</div>` : ""}
+    <p style="margin:10px 0 0">${esc(c.meaning)}</p>
+    ${c.irr ? `<div class="irr"><b>${esc(c.irr.label)}:</b> ${esc(c.irr.forms)}</div>` : ""}
+  </div><button class="btn sec" data-act="expand" style="margin-bottom:12px">Развернуть карточку ▾</button>`;
+}
+function viewSession(){
+  const s = V.screen, w = L().words[s.queue[s.i]];
+  const pos = `<div class="progress">${s.i+1} из ${s.queue.length}</div>`;
+  let h = header("",{back:true});
+  if (s.kind==="new"){
+    h += pos + cardBlock(w, s) + `<div class="row rate"><button class="btn sec" data-act="skipword">Уже знаю</button><button class="btn" data-act="learnword">Учить</button></div>`;
+    return h;
+  }
+  if (!s.shown){
+    const front = S.settings.front==="en"
+      ? `<div class="w-word">${esc(w.card.word)}</div>${(w.card.pat||[]).length ? `<div class="muted" style="margin-top:6px">${w.card.pat.map(p=>esc(p[0])).join(" · ")}</div>` : ""}<div style="margin-top:12px">${spk(w.card.word)}</div>`
+      : `<div style="font-size:22px;font-weight:600">${esc(w.card.meaning)}</div><div class="muted small" style="margin-top:8px">${esc(w.card.pos)}</div>`;
+    h += pos + `<div class="card front">${front}</div><button class="btn" data-act="show">Показать</button>`;
+    return h;
+  }
+  h += pos + cardBlock(w, s) + `<div class="row rate"><button class="btn b3" data-rate="0">Не помню</button><button class="btn b1" data-rate="2">Помню</button></div>`;
+  return h;
+}
+
+function viewDone(){
+  const s = V.screen;
+  return header("",{back:true}) + `<div class="card front"><div style="font-size:22px;font-weight:700">Готово</div><p class="muted">${s.kind==="new" ? `Новых слов взято в изучение: ${s.count}. Первое повторение — завтра.` : `Повторено карточек: ${s.count}.`}</p></div><button class="btn" data-act="back">К экрану «Учить»</button>`;
+}
+
+/* ---------- Резервная копия ---------- */
+function exportBackup(){
+  const data = JSON.parse(JSON.stringify(S));
+  delete data.settings.aiKey; delete data.settings.aiBusy;
+  const blob = new Blob([JSON.stringify({app:"word-cards", version:2, exported:new Date().toISOString(), data}, null, 1)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `heydi-kopiya-${dkey()}.json`;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  const n = Object.values(S.langs).reduce((s,l)=>s+Object.keys(l.words).length, 0);
+  V.bkMsg = {ok:true, text:`Копия сохранена: ${n} слов. Файл — в папке «Загрузки».`}; render();
+}
+function importBackup(file){
+  const rd = new FileReader();
+  rd.onload = () => {
+    let d;
+    try { d = JSON.parse(rd.result); } catch(e){ V.bkMsg = {text:"Это не файл копии: не удалось прочитать."}; return render(); }
+    const data = d && d.app==="word-cards" ? d.data : null;
+    if (!data || !data.langs || !data.langs.en || !data.settings){ V.bkMsg = {text:"Это не файл копии «Карточек слов»."}; return render(); }
+    const n = Object.values(data.langs).reduce((s,l)=>s+Object.keys(l.words||{}).length, 0);
+    if (!confirm(`Загрузить копию от ${(d.exported||"").slice(0,10)} (${n} слов)? Текущие слова, категории и прогресс на этом устройстве будут заменены.`)) return;
+    const keep = {aiKey:S.settings.aiKey, aiModel:S.settings.aiModel, aiFast:S.settings.aiFast, aiModels:S.settings.aiModels};
+    S = data; S.settings = {...S.settings, ...Object.fromEntries(Object.entries(keep).filter(([,v])=>v))};
+    save(); V.bkMsg = {ok:true, text:`Копия загружена: ${n} слов.`}; render();
+  };
+  rd.readAsText(file);
+}
+
+/* ---------- Тренировка: 3 этапа ---------- */
+const STAGES = ["Написание", "Словосочетания", "Своё предложение"];
+const SCH_CHECK = OBJ({wordUsedCorrectly:BOOL, otherMistakes:BOOL, corrected:STR, commentRu:STR});
+const normAns = s => String(s).toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"«»()]/g, " ").replace(/\s+/g, " ").trim();
+// Автоозвучка — только если включена в настройках; кнопки озвучки работают всегда
+function autoSpeak(text){ if (S.settings.autoSpeak) speak(text); }
+// Пункты этапа 2: три сочетания + конструкции из «Употребляется»
+function trainItems(c){ return [...c.coll.map(x=>({en:x[0], ru:x[1], kind:"Сочетание"})), ...(c.pat||[]).map(x=>({en:x[0], ru:x[1], kind:"Употребляется"}))]; }
+function answersFor(en, kind){
+  const out = new Set([normAns(en)]);
+  if (kind==="Употребляется"){
+    const core = normAns(en.replace(/someone's|somebody's|one's|someone|somebody|something|sb|sth|somewhere|\//gi, " "));
+    out.add(core); out.add(core.replace(/ (do|doing)$/, ""));
+  }
+  return out;
+}
+function startTrain(wid, from){
+  const w = L().words[wid]; if (!w) return;
+  go({type:"train", wid, stage:0, item:0, hint:0, msg:null, from});
+  document.getElementById("tin")?.focus();
+}
+function trainTarget(t, c){
+  if (t.stage===0) return {en:c.word};
+  if (t.stage===1) return trainItems(c)[t.item];
+  return null;
+}
+// Подсказка: открываем первые k букв, остальные — «_»; someone/something видны сразу
+function maskText(target, k){
+  let n = 0;
+  return target.split(/\s+/).map(word => /(someone|something|somebody|somewhere)/i.test(word) ? `<span class="mw muted">${esc(word)}</span>`
+    : `<span class="mw">${[...word].map(ch => /[a-zа-яё]/i.test(ch) ? (n++ < k ? esc(ch) : "_") : esc(ch)).join("")}</span>`).join(" ");
+}
+function hintHtml(t, c){
+  if (!t.hint) return "";
+  if (t.stage===2){
+    const ex = c.ex[0]?.[0] || "", start = (c.ex[1]?.[0] || ex).split(" ").slice(0,3).join(" ");
+    return `<div class="notice"><span class="muted">Пример:</span> ${say(ex)}${t.hint>1 ? `<br><span class="muted">Можно начать так:</span> <b>${esc(start)}…</b>` : ""}</div>`;
+  }
+  const target = trainTarget(t, c).en;
+  const k = (t.stage===1 ? target.split(" ")[0].length : 1) + t.hint - 1;
+  return `<div class="notice mask">${maskText(target, k)}</div>`;
+}
+function viewTrain(){
+  const t = V.screen, w = L().words[t.wid];
+  if (!w) return header("",{back:true}) + `<p class="muted hint">Слово не найдено.</p>`;
+  const c = w.card;
+  if (t.stage===3) return header("",{back:true}) + `<div class="card front"><div style="font-size:22px;font-weight:700">Тренировка пройдена</div>
+      <p class="muted">Слово <b>${esc(c.word)}</b>: все три этапа.</p></div><button class="btn" data-act="back">Вернуться</button>`;
+  let h = header("",{back:true}) + `<div class="steps">${STAGES.map((s,i)=>`<span class="${i<t.stage?"done":i===t.stage?"on":""}">${i+1}</span>`).join("")}</div>
+    <div class="progress" style="margin-top:4px">Этап ${t.stage+1} из 3 · ${STAGES[t.stage]}</div>`;
+  let task = "";
+  if (t.stage===0) task = `<div class="muted small">Напишите по-английски</div><div class="task">${esc(c.meaning)}</div><div class="muted small">${esc(c.pos)}</div>`;
+  if (t.stage===1){ const items = trainItems(c), it = items[t.item];
+    task = `<div class="muted small">${it.kind} ${t.item+1} из ${items.length} · напишите по-английски полностью</div><div class="task">${esc(it.ru)}</div>`; }
+  if (t.stage===2) task = `<div class="muted small">Придумайте своё предложение со словом</div><div class="task">${esc(c.word)}</div><div class="muted small">${esc(c.meaning.split(";").slice(0,2).join(";"))}</div>`;
+  h += `<div class="card front tcard">${task}</div>`;
+  h += t.stage===2
+    ? `<textarea class="full" id="tin" rows="3" placeholder="Ваше предложение по-английски" autocapitalize="sentences" spellcheck="false" ${t.busy||t.passed?"disabled":""}>${esc(t.text||"")}</textarea>`
+    : `<input class="full" id="tin" placeholder="Ответ" autocapitalize="off" autocomplete="off" spellcheck="false" value="${esc(t.text||"")}" ${t.ok?"disabled":""}>`;
+  h += hintHtml(t, c);
+  if (t.msg) h += t.msg;
+  if (t.busy) h += `<div class="busy" style="margin-top:12px"><span class="spin"></span>ИИ проверяет предложение…</div>`;
+  else if (t.passed) h += `<button class="btn" data-act="tnext" style="margin-top:12px">Завершить тренировку</button>`;
+  else if (!t.ok) h += `<div class="row rate" style="margin-top:12px"><button class="btn sec" data-act="thint">Подсказка</button><button class="btn" data-act="tcheck">Проверить</button></div>`;
+  return h;
+}
+function trainNext(){
+  const t = V.screen, w = L().words[t.wid];
+  t.hint = 0; t.msg = null; t.text = ""; t.ok = false;
+  if (t.stage===1 && t.item < trainItems(w.card).length-1) t.item++;
+  else { t.stage++; t.item = 0; }
+  if (t.stage===3){ const d = logDay(); d.trained = (d.trained||0) + 1; save(); }
+  render(); document.getElementById("tin")?.focus();
+}
+const resBox = (ok, title, body="") => `<div class="res ${ok?"ok":"bad"}"><div class="res-h">${title}</div>${body}</div>`;
+async function trainCheck(){
+  const t = V.screen, w = L().words[t.wid], c = w.card, el = document.getElementById("tin");
+  const val = (el?.value || "").trim(); t.text = val; if (!val || t.ok || t.busy || t.passed) return;
+  if (t.stage < 2){
+    const tg = trainTarget(t, c), ok = answersFor(tg.en, tg.kind).has(normAns(val));
+    if (!ok){ t.msg = resBox(false, "Неверно. Попробуйте ещё раз."); render(); const f = document.getElementById("tin"); f.focus(); f.select(); return; }
+    t.ok = true; t.msg = resBox(true, "Верно"); render(); autoSpeak(tg.en);
+    setTimeout(()=>{ if (V.screen===t) trainNext(); }, 1000);
+    return;
+  }
+  if (!aiReady()){ t.msg = resBox(false, "Для проверки предложения нужен ключ ИИ в «Настройках»."); return render(); }
+  t.busy = true; t.msg = null; render();
+  try {
+    const r = await gemini(`A Russian-speaking learner of English wrote a sentence to practise the word «${c.word}» (meaning: «${c.meaning}»).
+Sentence: «${val}»
+- wordUsedCorrectly: true if «${c.word}» (any grammatical form) is in the sentence and is used correctly and naturally in a fitting meaning. Ignore other mistakes for this field.
+- otherMistakes: true if there are any other grammar, spelling or word-choice mistakes.
+- corrected: the corrected, natural version of the whole sentence, keeping its meaning (the same sentence if there are no mistakes).
+- commentRu: a very short explanation in Russian (1–2 sentences) of what is wrong; empty string if nothing is wrong.`, SCH_CHECK);
+    if (V.screen!==t) return;
+    t.busy = false;
+    if (r.wordUsedCorrectly){
+      t.passed = true;
+      const fix = r.otherMistakes && r.corrected
+        ? `<div class="res-sub">Другие ошибки</div><div class="small muted">${esc(r.commentRu||"")}</div><div class="res-sub">Правильно</div><div class="res-fix">${say(r.corrected)}</div>` : "";
+      t.msg = resBox(true, "Верно: слово использовано правильно", fix);
+      autoSpeak(r.otherMistakes && r.corrected ? r.corrected : val);
+    } else t.msg = resBox(false, "Неверно: слово использовано неправильно", r.commentRu ? `<div class="small muted" style="margin-top:6px">${esc(r.commentRu)}</div>` : "");
+  } catch(e){ t.busy = false; t.msg = resBox(false, esc(e.message)); }
+  render();
+}
+
+function viewSettings(){
+  const vs = langVoices("en");
+  return header("Настройки") + viewAccount() + `<div class="card">
+    <label class="set" for="s-new">Новых слов в день</label>
+    <select class="full" id="s-new">${[3,5,10,15,20,30,50].map(n=>`<option ${n==S.settings.newPerDay?"selected":""}>${n}</option>`).join("")}</select>
+    <label class="set" for="s-mode">Режим повторения</label>
+    <select class="full" id="s-mode"><option value="schedule" ${S.settings.mode==="schedule"?"selected":""}>По расписанию — только слова, которые пора повторить</option><option value="free" ${S.settings.mode==="free"?"selected":""}>Свободно — все слова на изучении</option></select>
+    <label class="set" for="s-front">При повторении сначала показывать</label>
+    <select class="full" id="s-front"><option value="en" ${S.settings.front==="en"?"selected":""}>Английское слово</option><option value="ru" ${S.settings.front==="ru"?"selected":""}>Русское значение</option></select>
+  </div>
+  <div class="card">
+    <label class="switch" for="s-auto" style="margin-top:0"><span>Озвучивать автоматически<br><span class="small muted" style="font-weight:400">Слово звучит само при показе карточки и после верного ответа. Если выключено — только по нажатию.</span></span><input type="checkbox" id="s-auto" ${S.settings.autoSpeak?"checked":""}></label>
+    <label class="set" for="s-voice">Голос (английский)</label>
+    <select class="full" id="s-voice"><option value="">Автоматически</option>${vs.map(v=>`<option value="${esc(v.voiceURI)}" ${v.voiceURI===S.settings.voice?"selected":""}>${esc(v.name)} (${esc(v.lang)})</option>`).join("")}</select>
+    <label class="set" for="s-rate">Скорость речи: <span id="ratev">${S.settings.rate}</span></label>
+    <input type="range" id="s-rate" min="0.5" max="1.2" step="0.05" value="${S.settings.rate}" style="width:100%">
+    <button class="btn sec" style="margin-top:12px" data-say="Speaking several languages gives her a clear advantage at work.">Проверить голос</button>
+    <p class="small muted">Голоса лучше качества можно скачать в настройках системы: на Mac и iPhone — «Универсальный доступ → Устная речь».</p>
+  </div>
+  <div class="card"><b>ИИ (Gemini)</b>
+    <p class="small muted" style="margin:6px 0 10px">Создаёт карточки и новые примеры. Ключ хранится только на этом устройстве.</p>
+    <input class="full" id="s-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Вставьте ключ API" value="${esc(S.settings.aiKey||"")}">
+    <button class="btn" style="margin-top:10px" data-act="checkkey" ${V.keyMsg?.busy?"disabled":""}>Проверить ключ</button>
+    ${V.keyMsg ? `<div class="notice ${V.keyMsg.ok?"":"warn"}">${esc(V.keyMsg.text)}</div>` : ""}
+    ${(S.settings.aiModels||[]).length ? modelSelect("s-model", "Модель для карточек и примеров", S.settings.aiModel) + modelSelect("s-fast", "Модель для разбора слова (быстрая)", S.settings.aiFast||S.settings.aiModel) + `<p class="small muted" style="margin:8px 0 0">Если модель перегружена, программа сама попробует другую.</p>` : ""}
+    <p class="small muted" style="margin:12px 0 0">Как получить бесплатный ключ: откройте <b>aistudio.google.com</b>, войдите через Google-аккаунт, нажмите «Get API key» → «Create API key», скопируйте ключ и вставьте сюда.</p></div>
+  <div class="card"><b>Резервная копия</b>
+    <p class="small muted" style="margin:6px 0 10px">Файл со всеми словами, категориями и прогрессом (обоих языков). Ключ ИИ в файл не попадает.</p>
+    <div class="row rate"><button class="btn sec" data-act="export">Скачать копию</button><button class="btn sec" data-act="import">Загрузить копию</button></div>
+    <input type="file" id="importfile" accept=".json,application/json" hidden>
+    ${V.bkMsg ? `<div class="notice ${V.bkMsg.ok?"ok":"warn"}">${esc(V.bkMsg.text)}</div>` : ""}</div>
+  <button class="btn sec" data-act="reset" style="color:var(--bad)">Сбросить все данные</button>`;
+}
+
+function renderTabs(){
+  const icons = {
+    learn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>',
+    dict:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>',
+    settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>'
+  };
+  const names = {learn:"Учить",dict:"Словарь",settings:"Настройки"};
+  document.getElementById("tabs").innerHTML = Object.keys(names).map(k=>`<button class="${V.tab===k?"on":""}" data-tab="${k}">${icons[k]}${names[k]}</button>`).join("");
+}
+
+function render(){
+  let h;
+  const sc = V.screen;
+  if (sc?.type==="session") h = viewSession();
+  else if (sc?.type==="done") h = viewDone();
+  else if (sc?.type==="train") h = viewTrain();
+  else if (sc?.type==="word") h = viewWord(sc.id);
+  else if (sc?.type==="cat") h = viewCategory(sc.id);
+  else h = V.tab==="learn" ? viewLearn() : V.tab==="dict" ? viewDict() : viewSettings();
+  if (V.tab==="dict" && (!sc || sc.type==="cat")) h += V.adding
+    ? `<div class="backdrop" data-act="canceladd"></div><div class="sheet">${addForm()}</div>`
+    : `<button class="fab" data-act="addword">+ Слово</button>`;
+  document.getElementById("app").innerHTML = h;
+  renderTabs();
+  const f = document.getElementById("newword") || document.getElementById("newcat");
+  if (f && !f.dataset.done){ f.focus(); f.setSelectionRange?.(f.value.length, f.value.length); }
+}
+
+/* ---------- Действия ---------- */
+function go(screen){ V.screen = screen; V.delAsk = null; V.catDelAsk = null; V.menu=false; window.scrollTo(0,0); render(); }
+function back(){
+  const sc = V.screen;
+  if (sc?.type==="word" && sc.from) return go(sc.from);
+  if (sc?.type==="train") return go(sc.from || null);
+  V.adding = null;
+  go(null);
+}
+
+function startSession(kind){
+  const sel = L().cats.some(c=>c.id===S.sel[S.lang]) ? S.sel[S.lang] : "all";
+  let ids;
+  if (kind==="new") ids = newWords(sel).slice(0, newLeft()).map(w=>w.id);
+  else ids = shuffle(reviewPool(sel).map(w=>w.id));
+  if (!ids.length) return;
+  go({type:"session", kind, queue:ids, i:0, shown:false, count:0, forgot:false});
+}
+function nextInSession(){
+  const s = V.screen;
+  s.i++; s.shown=false; s.expanded=false;
+  if (s.i >= s.queue.length) return go({type:"done", kind:s.kind, count:s.count});
+  window.scrollTo(0,0); render();
+}
+function rate(r){
+  const s = V.screen, w = L().words[s.queue[s.i]];
+  const now = dayStart();
+  if (r===2){ w.stage = Math.min(w.stage+1, INTERVALS.length-1); w.due = now + INTERVALS[w.stage]*DAY; }
+  else {
+    w.stage = 0; w.due = now + DAY;
+    if (!s.again) s.again = {};
+    if (!s.again[w.id]){ s.again[w.id]=1; s.queue.push(w.id); } // вернётся в конце этого занятия
+  }
+  logDay().reviews++; s.count++;
+  save();
+  nextInSession();
+}
+
+function createWord(){
+  const a = V.adding; if (!a || a.busy) return;
+  const text = (document.getElementById("newword")?.value ?? a.text ?? "").trim();
+  a.text = text; if (!text) return;
+  if (S.lang!=="en"){ a.msg = `<div class="notice">Карточки для турецкого появятся после английского.</div>`; return render(); }
+  if (!aiReady()){ a.msg = `<div class="notice warn">Чтобы ИИ создавал карточки, добавьте ключ Gemini в «Настройках». <button class="reveal" data-act="gosettings">Открыть настройки</button></div>`; return render(); }
+  analyze(text, false);
+}
+async function analyze(text, exact){
+  const a = V.adding;
+  a.busy = "ИИ разбирает слово…"; a.msg = ""; a.res = null; render();
+  try {
+    const r = await gemini(promptAnalyze(text, exact), SCH_ANALYZE, true);
+    if (V.adding!==a) return;
+    a.busy = null;
+    if (r.isEnglish===false || !r.headword?.trim()){ a.msg = `<div class="notice warn">Это не похоже на английское слово. Проверьте написание.</div>`; return render(); }
+    r.headword = r.headword.trim();
+    if (exact) r.correction = a.text.toLowerCase()!==r.headword.toLowerCase() ? (r.correction || "") : "";
+    r.senses = (r.senses||[]).filter(s=>s && s.ru).slice(0,5);
+    a.res = r; a.pick = null;
+    const ex = existingFor(r.headword);
+    if (r.senses.length > 1){ const i = r.senses.findIndex(s=>!ex.some(w=>(w.card.sense||"").toLowerCase()===s.ru.toLowerCase())); a.pick = i>=0 ? i : null; }
+    if (r.senses.length <= 1 && !(r.alternatives||[]).length && !ex.length) return makeCards(); // спрашивать нечего — сразу создаём
+    render();
+  } catch(e){ if (V.adding!==a) return; a.busy = null; a.msg = `<div class="notice warn">${esc(e.message)}</div>`; render(); }
+}
+async function makeCards(){
+  const a = V.adding, r = a?.res; if (!r || a.busy) return;
+  a.busy = "ИИ создаёт карточку…"; a.msg = ""; render();
+  let card;
+  try {
+    const sense = (r.senses||[]).length > 1 && a.pick!=="all" && a.pick!=null ? r.senses[a.pick] : null;
+    card = await aiCard(r.headword, sense);
+    if (V.adding!==a) return;
+    if (!card.coll.length || !card.ex.length || !card.meaning) throw new Error("ИИ вернул неполную карточку. Попробуйте ещё раз.");
+  } catch(e){ if (V.adding!==a) return; a.busy = null; a.msg = `<div class="notice warn">${esc(e.message)}</div>`; return render(); }
+  const id = uid();
+  L().words[id] = { id, key:null, card, cats:[a.cat], status:"new", stage:0, due:0, note:"", added:Date.now(), started:0,
+    seenAs: a.text.toLowerCase()!==r.headword.toLowerCase() ? a.text : "" };
+  S.lastCat[S.lang] = a.cat; save();
+  const from = V.screen; V.adding = null;
+  go({type:"word", id, from});
+
+}
+async function rewriteExample(wid, i, mode){
+  const w = L().words[wid]; if (!w || V.exBusy) return;
+  if (!aiReady()){ V.exMsg = {wid, i, msg:"Добавьте ключ ИИ в «Настройках»."}; return render(); }
+  const {target, prompt} = promptExample(w.card, i, mode);
+  if (mode!=="replace" && target===(w.card.ex[i][2]||w.card.level)){ V.exMsg = {wid, i, msg: mode==="easier" ? "Проще уже некуда: это уровень A1." : "Сложнее уже некуда: это уровень C2."}; return render(); }
+  V.exBusy = {wid, i}; V.exMsg = null; render();
+  try {
+    const r = await gemini(prompt, SCH_EX);
+    if (!r.en) throw new Error("ИИ не прислал пример. Попробуйте ещё раз.");
+    w.card.ex[i] = [r.en, r.ru||"", LEVELS.includes(r.level) ? r.level : target]; save();
+  } catch(e){ V.exMsg = {wid, i, msg:e.message}; }
+  V.exBusy = null; render();
+}
+function nameOf(id){ return (S.settings.aiModels||[]).find(m=>m.id===id)?.name || id; }
+function modelSelect(id, label, cur){ return `<label class="set" for="${id}">${label}</label><select class="full" id="${id}">${S.settings.aiModels.map(m=>`<option value="${esc(m.id)}" ${m.id===cur?"selected":""}>${esc(m.name)}</option>`).join("")}</select>`; }
+async function checkKey(){
+  const el = document.getElementById("s-key"); S.settings.aiKey = (el?.value||"").trim(); save();
+  if (!S.settings.aiKey){ V.keyMsg = {text:"Вставьте ключ."}; return render(); }
+  V.keyMsg = {text:"Проверяю…", ok:true, busy:true}; render();
+  try {
+    const list = await aiModels();
+    if (!list.length) throw new Error("Ключ работает, но подходящих моделей Gemini Flash не найдено.");
+    S.settings.aiModels = list;
+    const main = list.find(m=>!/lite/i.test(m.id)) || list[0], fast = list.find(m=>/lite/i.test(m.id)) || main;
+    if (!list.some(m=>m.id===S.settings.aiModel) || /lite/i.test(S.settings.aiModel)) S.settings.aiModel = main.id;
+    if (!list.some(m=>m.id===S.settings.aiFast)) S.settings.aiFast = fast.id;
+    save(); V.keyMsg = {ok:true, text:"Ключ работает. Карточки: " + nameOf(S.settings.aiModel) + ". Разбор слова: " + nameOf(S.settings.aiFast) + "."};
+  } catch(e){ V.keyMsg = {text:e.message}; }
+  render();
+}
+
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-say],[data-act],[data-tab],[data-lang],[data-cat],[data-word],[data-rate],[data-reveal],[data-addhere],[data-alt],[data-exm]");
+  if (!t){ if (V.menu){ V.menu=false; render(); } return; }
+  if (t.dataset.say !== undefined && !t.dataset.act){ speak(t.dataset.say); return; }
+  if (t.dataset.tab){ V.tab=t.dataset.tab; V.screen=null; V.adding=null; V.addCat=false; V.menu=false; window.scrollTo(0,0); return render(); }
+  if (t.dataset.lang){ S.lang=t.dataset.lang; V.menu=false; V.screen=null; save(); return render(); }
+  if (t.dataset.cat){ V.adding=null; return go({type:"cat", id:t.dataset.cat}); }
+  if (t.dataset.word) return go({type:"word", id:t.dataset.word, from:V.screen});
+  if (t.dataset.rate) return rate(+t.dataset.rate);
+  if (t.dataset.reveal !== undefined){ const el=document.getElementById("tr"+t.dataset.reveal); el.hidden=false; t.remove(); return; }
+  if (t.dataset.addhere){ const w=L().words[t.dataset.addhere]; const c=V.adding.cat; if(!w.cats.includes(c)) w.cats.push(c); S.lastCat[S.lang]=c; save(); V.adding=null; return go({type:"word", id:w.id, from:V.screen}); }
+  if (t.dataset.alt !== undefined && V.adding?.res){ const x = V.adding.res.alternatives[+t.dataset.alt]; if (x) analyze(x.headword, true); return; }
+  if (t.dataset.exm) return rewriteExample(t.dataset.exw, +t.dataset.exi, t.dataset.exm);
+  const a = t.dataset.act;
+  if (a==="back") return back();
+  if (a==="delask"){ V.delAsk = V.screen.id; render(); window.scrollTo(0, document.body.scrollHeight); return; }
+  if (a==="catdelask"){ V.catDelAsk = V.screen.id; render(); window.scrollTo(0, document.body.scrollHeight); return; }
+  if (a==="catdelcancel"){ V.catDelAsk = null; return render(); }
+  if (a==="catdel"){ const c = V.screen.id;
+    for (const w of words()) if (w.cats.includes(c)){ w.cats = w.cats.filter(x=>x!==c); if (!w.cats.length) delete L().words[w.id]; }
+    L().cats = L().cats.filter(x=>x.id!==c); if (S.sel[S.lang]===c) S.sel[S.lang]="all"; if (S.lastCat[S.lang]===c) S.lastCat[S.lang]=L().cats[0]?.id||null;
+    save(); V.catDelAsk = null; return go(null); }
+  if (a==="delcancel"){ V.delAsk = null; return render(); }
+  if (a==="delword"){ delete L().words[V.screen.id]; save(); V.delAsk = null; return back(); }
+  if (a==="uncat"){ const w = L().words[V.screen.id], c = V.screen.from.id; w.cats = w.cats.filter(x=>x!==c); save(); V.delAsk = null; return back(); }
+  if (a==="langmenu"){ V.menu=!V.menu; return render(); }
+  if (a==="startnew") return startSession("new");
+  if (a==="startreview") return startSession("review");
+  if (a==="train") return startTrain(t.dataset.wid, V.screen);
+  if (a==="thint"){ const tr = V.screen; tr.hint++; render(); document.getElementById("tin")?.focus(); return; }
+  if (a==="tcheck") return trainCheck();
+  if (a==="tnext") return trainNext();
+  if (a==="expand"){ V.screen.expanded = true; return render(); }
+  if (a==="collapse"){ V.screen.expanded = false; render(); window.scrollTo(0,0); return; }
+  if (a==="show"){ V.screen.shown=true; window.scrollTo(0,0); render(); const w=L().words[V.screen.queue[V.screen.i]]; if (S.settings.front==="ru") autoSpeak(w.card.word); return; }
+  if (a==="learnword"||a==="skipword"){
+    const s=V.screen, w=L().words[s.queue[s.i]];
+    w.started = Date.now(); logDay().started++;
+    if (a==="learnword"){ w.status="learning"; w.stage=0; w.due=dayStart()+DAY; s.count++; } else w.status="skipped";
+    save(); return nextInSession();
+  }
+  if (a==="addcat"){ V.addCat=true; return render(); }
+  if (a==="cancelcat"){ V.addCat=false; return render(); }
+  if (a==="savecat"){ const n=document.getElementById("newcat").value.trim(); if(!n) return; const c={id:uid(),name:n}; L().cats.push(c); S.lastCat[S.lang]=c.id; save(); V.addCat=false; return render(); }
+  if (a==="addword"){ V.adding={text:"", cat:defaultAddCat()}; return render(); }
+  if (a==="canceladd"){ V.adding=null; return render(); }
+  if (a==="createword") return createWord();
+  if (a==="makecards") return makeCards();
+  if (a==="checkkey") return checkKey();
+  if (a==="gosettings"){ V.tab="settings"; V.screen=null; V.adding=null; window.scrollTo(0,0); return render(); }
+  if (a==="signin") return doAuth("in");
+  if (a==="signup") return doAuth("up");
+  if (a==="signout"){ sb.auth.signOut().then(()=>{ sbUser = null; SY.status = "Вы вышли. Данные остались на этом устройстве."; render(); }); return; }
+  if (a==="takecloud"){ const d = SY.ask.remote; SY.ask = null; applyCloud(d.data); S.sync = {lastRemote:d.updated_at, dirty:false, linked:sbUser.id}; persist(); SY.status = "Данные загружены из облака"; SY.err = ""; return render(); }
+  if (a==="takelocal"){ SY.ask = null; SY.err = ""; return push(); }
+  if (a==="syncnow"){ SY.status=""; return pull(); }
+  if (a==="export") return exportBackup();
+  if (a==="import"){ document.getElementById("importfile").click(); return; }
+  if (a==="reset"){ if (confirm("Удалить все слова, категории и прогресс на этом устройстве?")){ const k=S.settings; S=freshState(); Object.assign(S.settings,{aiKey:k.aiKey, aiModel:k.aiModel, aiFast:k.aiFast, aiModels:k.aiModels}); save(); V={tab:"learn",screen:null}; render(); } return; }
+});
+document.addEventListener("keydown", e => {
+  if (e.key!=="Enter") return;
+  if (e.target.id==="newword"){ e.preventDefault(); createWord(); }
+  if (e.target.id==="a-pass"){ e.preventDefault(); doAuth("in"); }
+  if (e.target.id==="tin" && !e.shiftKey){ e.preventDefault(); trainCheck(); }
+  if (e.target.id==="newcat"){ e.preventDefault(); document.querySelector('[data-act="savecat"]').click(); }
+});
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.dataset.note){ L().words[t.dataset.note].note = t.value; save(); }
+  if (t.id==="newword" && V.adding){ V.adding.text = t.value; }
+  if (t.id==="tin" && V.screen?.type==="train"){ V.screen.text = t.value; }
+  if (t.id==="s-key"){ S.settings.aiKey=t.value.trim(); V.keyMsg=null; save(); }
+  if (t.id==="s-rate"){ S.settings.rate=+t.value; document.getElementById("ratev").textContent=t.value; save(); }
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.id==="catsel"){ S.sel[S.lang]=t.value; save(); render(); }
+  if (t.id==="addcatsel" && V.adding){ V.adding.cat=t.value; V.adding.msg=""; S.lastCat[S.lang]=t.value; save(); render(); }
+  if (t.id==="s-new"){ S.settings.newPerDay=+t.value; save(); }
+  if (t.id==="s-mode"){ S.settings.mode=t.value; save(); }
+  if (t.id==="importfile" && t.files?.[0]){ importBackup(t.files[0]); t.value = ""; }
+  if (t.id==="s-auto"){ S.settings.autoSpeak=t.checked; save(); }
+  if (t.id==="s-front"){ S.settings.front=t.value; save(); }
+  if (t.dataset.pick !== undefined && V.adding){ V.adding.pick = t.dataset.pick==="all" ? "all" : +t.dataset.pick; V.adding.msg=""; render(); }
+  if (t.id==="s-model"){ S.settings.aiModel=t.value; save(); }
+  if (t.id==="s-fast"){ S.settings.aiFast=t.value; save(); }
+  if (t.id==="s-voice"){ S.settings.voice=t.value; save(); speak("advantage"); }
+});
+
+render();
+initSync();
+</script>
+</body>
+</html>
