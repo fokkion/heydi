@@ -309,7 +309,8 @@ for (const w of Object.values(S.langs.en.words)) if (LIB.en[w.key] && (w.card.ex
 /* ---------- Облако (Supabase): вход и синхронизация ---------- */
 const SB_URL = "https://pnyqgdhcemkkrzyuimbb.supabase.co";
 const SB_KEY = "sb_publishable_bPAvNlzFsogqzb4K4Nzh3w_wxj1yQXz"; // публичный ключ: доступ к данным закрыт правилами базы
-const LOCAL_ONLY = ["aiKey", "aiModel", "aiFast", "aiModels", "aiBusy", "voice"]; // настройки этого устройства
+const LOCAL_ONLY = ["aiBusy", "voice"]; // настройки только этого устройства (ключ ИИ синхронизируется — хранится в защищённой записи пользователя)
+const AI_KEYS = ["aiKey", "aiModel", "aiFast", "aiModels"];
 let sb = null, sbUser = null, pushTimer = null, applying = false;
 const SY = { status:"", busy:false, err:"" };
 
@@ -321,9 +322,12 @@ function save(){
 function cloudData(){ const d = JSON.parse(JSON.stringify(S)); LOCAL_ONLY.forEach(k=>delete d.settings[k]); delete d.sync; return d; }
 function applyCloud(d){
   const keep = {}; LOCAL_ONLY.forEach(k=>{ if (S.settings[k]!==undefined) keep[k] = S.settings[k]; });
+  let keepAi = false;
+  if (!d.settings?.aiKey && S.settings.aiKey){ AI_KEYS.forEach(k=>{ if (S.settings[k]!==undefined) keep[k] = S.settings[k]; }); keepAi = true; } // в облаке ключа нет — оставляем ключ устройства
   const sync = S.sync || {};
   applying = true; S = d; S.settings = {...S.settings, ...keep}; S.sync = sync; applying = false;
   persist();
+  if (keepAi) schedulePush(); // и отправляем его в облако
 }
 const wordCount = d => Object.values(d.langs||{}).reduce((s,l)=>s+Object.keys(l.words||{}).length, 0);
 function schedulePush(){ if (!sbUser) return; clearTimeout(pushTimer); pushTimer = setTimeout(push, 1500); }
@@ -354,7 +358,7 @@ async function pull(){
     }
     return push();                                          // здесь изменения новее
   }
-  if (sync.dirty) return push();
+  if (sync.dirty || (S.settings.aiKey && !data.data.settings?.aiKey)) return push(); // своё изменение или ключ ИИ ещё не в облаке
   SY.status = "Всё синхронизировано"; if (V.tab==="settings") render();
 }
 async function initSync(){
@@ -956,7 +960,7 @@ function viewSettings(){
     <p class="small muted">Голоса лучше качества можно скачать в настройках системы: на Mac и iPhone — «Универсальный доступ → Устная речь».</p>
   </div>
   <div class="card"><b>ИИ (Gemini)</b>
-    <p class="small muted" style="margin:6px 0 10px">Создаёт карточки и новые примеры. Ключ хранится только на этом устройстве.</p>
+    <p class="small muted" style="margin:6px 0 10px">Создаёт карточки и новые примеры. Если вы вошли в облако, ключ хранится в вашей защищённой записи и сам появится на других устройствах после входа.</p>
     <input class="full" id="s-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Вставьте ключ API" value="${esc(S.settings.aiKey||"")}">
     <button class="btn" style="margin-top:10px" data-act="checkkey" ${V.keyMsg?.busy?"disabled":""}>Проверить ключ</button>
     ${V.keyMsg ? `<div class="notice ${V.keyMsg.ok?"":"warn"}">${esc(V.keyMsg.text)}</div>` : ""}
